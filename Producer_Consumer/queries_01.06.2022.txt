@@ -1,0 +1,65 @@
+ have a few doubts which are as follows:
+
+1. PD / PCB stored in which part of the RAM?  
+As it is a core component and kernel object how is it protected ?
+--->pds of processes are created and maintained in process-manager - 
+    since process-manager is a core component, it is present in  
+    kernel-space, so pds are also, present in kernel-space
+    --->refer to freehand_diagrams_04.12.2021.pdf / slide-7 
+        --->each pd can be managing a kernel-stack
+    --->refer to freehand_diagrams_22.11.2021.pdf/ slide-26
+    --->refer to freehand_diagrams_06.12.2021.pdf/ slide-20
+    
+---->how is a pd/pcb protected from user-space/applications ??
+     --->since pds/pcbs are part of kernel-space and their 
+         mappings/ptes will have u/s bit set to 0 
+     --->since pds/pcbs are part of kernel-space, access is 
+         disallowed to applications, which executed with 
+         user-mode privileges of cpu - so, there is a form
+         of memory-protection  
+     ---->refer to slides 38/40/45 of freehand_diagrams_06.12.2021.pdf     
+
+2. In the assignment 2 , 
+question 1 (h) where multiple instances of the processes 
+were having the same virtual addresses 
+for global variables when randomize_va_space = 0 , 
+are these instances "Threads"? If yes then as far as I know threads 
+share all segments except stack then why are we
+not able to access other segments if these are threads?
+---->slide 38 of freehand_diagrams_06.12.2021.pdf 
+     --->how many user-space address-spaces are present ??
+         --->as many as the number of processes/active-applications
+     --->what are their address-ranges ??
+         --->will vary from one platform to another 
+             -->in our case, refer to line nos.210-220 of 
+                2_assignment.txt  	
+     --->how many kernel-space address-spaces are present ??
+            --->effectively, a single address-space
+     --->what are their ranges ??
+             -->in our case, refer to line nos.210-220 of 
+                2_assignment.txt  
+                -->there is a document mentioned in this
+                   txt file - refer to it ??	
+
+
+
+3. What do we use "execl" for , "process overlaying" or "chain-loading"?
+
+    --->refer to slides 9- of freehand_diagrams_15.12.2021.pdf
+        --->if we need to load a new applicationj in a processi, 
+            we need to use execl() in the code of our 
+            applicationi of processi 
+        --->fork() can create duplicate processes meaning, 
+            a new-processi+1, but it is provided a copy of
+            applicationi of processi/parent-process
+        --->if we need to load an applicationj in this new-processi+1, 
+            we need to use execl() in applicationi of processi  
+        --->effectively, we have created a new-processi+1 with
+            a new-applicationj
+        --->refer to assign1_4_mod.c
+            --->in each child-process we need to load an instance
+                of gcc, so that we can do certain jobs
+            --->in this code-sample, there are different children
+                processes and execl() is used to load different 
+                applications  
+
